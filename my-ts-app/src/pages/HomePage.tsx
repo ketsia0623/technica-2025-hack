@@ -1,3 +1,4 @@
+// src/pages/HomePage.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,15 +7,24 @@ const HomePage: React.FC = () => {
 
   return (
     <div>
-      <h1>
-        Financial Literacy Hub
+      <h1 style={{ fontSize: '60px', fontWeight: 'bold' }}>
+        FINANCE UNLOCKED
       </h1>
-      <p>
-        Master your finances with our comprehensive dashboard and interactive quiz
-      </p>
-      <button
-        onClick={() => navigate('/login')}
-      >
+
+      <h3>
+        Master your finances with our comprehensive dashboard and interactive quiz.
+      </h3>
+      {/* Your box */}
+        <div className="container">
+      <div className="box">
+        <h2>Your financial life, your adventure. 
+          Make choices, see the consequences, 
+          and level up your money skills. </h2>
+      </div>
+    </div>
+
+
+      <button onClick={() => navigate('/login')}>
         Get Started
       </button>
     </div>
