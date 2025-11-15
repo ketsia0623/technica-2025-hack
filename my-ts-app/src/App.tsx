@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
 import Quiz from './pages/Quiz'; 
+import Sim from './pages/Sim';
 import './App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/quiz" element={<Quiz />} />
+          <Route path="/sim" element={<Sim />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </div>

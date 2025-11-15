@@ -1,11 +1,15 @@
 // src/pages/HomePage.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/header';
+import Footer from '../components/footer';
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
 
   return (
+    <div className="login-page">
+        <Header />
     <div>
       <h1 style={{ fontSize: '60px', fontWeight: 'bold' }}>
         FINANCE UNLOCKED
@@ -37,6 +41,14 @@ const HomePage: React.FC = () => {
       >
         Quiz
       </button>
+      <button
+        onClick={() => navigate('/sim')}
+      >
+        Sim
+      </button>
+      
+    </div>
+    <Footer />
     </div>
   );
 };
