@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { JSX } from "react/jsx-runtime";
-import "../styles/quiz.css";
+import "./Quiz.css";
+
 
 
 type Question = {
