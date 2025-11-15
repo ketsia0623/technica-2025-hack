@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn = false, onLogout }) => {
             <span className="quiz-link">Quiz</span>
         </div>
         <div className="header-logo" onClick={() => navigate('/sim')}>
-            <span className="quiz-link">Sim</span>
+            <span className="quiz-link">Simulation</span>
         </div>
 
         <nav className="header-nav">

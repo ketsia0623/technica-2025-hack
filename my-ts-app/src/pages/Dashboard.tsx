@@ -10,6 +10,8 @@ import {
   Cell
 } from "recharts";
 import "./Dashboard.css";
+import Footer from "../components/footer";
+import Header from "../components/header";
 
 interface Entry {
   action: string;
@@ -88,6 +90,8 @@ export default function Dashboard() {
   );
 
   return (
+    <div className="login-page">
+        <Header />
     <div className="dashboard-container">
       <h2>
         Daily Spending Dashboard &nbsp;
@@ -157,6 +161,8 @@ export default function Dashboard() {
       ) : (
         <p className="no-transactions">No transactions for this day</p>
       )}
+    </div>
+    <Footer />
     </div>
   );
 }
