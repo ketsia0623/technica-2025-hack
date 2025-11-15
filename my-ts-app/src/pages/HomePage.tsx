@@ -27,6 +27,16 @@ const HomePage: React.FC = () => {
       <button onClick={() => navigate('/login')}>
         Get Started
       </button>
+      <button
+        onClick={() => navigate('/dashboard')}
+      >
+        Dashboard
+      </button>
+      <button
+        onClick={() => navigate('/quiz')}
+      >
+        Quiz
+      </button>
     </div>
   );
 };
