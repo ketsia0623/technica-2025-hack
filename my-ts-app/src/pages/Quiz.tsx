@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { JSX } from "react/jsx-runtime";
 import "./Quiz.css"; // make sure Quiz.css is in the same folder
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 
 type Question = {
@@ -74,6 +76,8 @@ export default function QuizPage(): JSX.Element {
   };
 
   return (
+    <div className="quiz-page">
+        <Header />
     <div className="quiz-container">
       <div className="quiz-card">
         <header>
@@ -187,6 +191,8 @@ export default function QuizPage(): JSX.Element {
           </div>
         )}
       </div>
+    </div>
+    <Footer />
     </div>
   );
 }
