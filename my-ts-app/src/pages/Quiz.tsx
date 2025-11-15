@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import { JSX } from "react/jsx-runtime";
 import "./Quiz.css"; // make sure Quiz.css is in the same folder
 
+
 type Question = {
   id: number;
   question: string;
   options: string[];
 };
 
+
 const questions: Question[] = [
   {
     id: 1,
     question: "Where do you want to live this semester?",
-    options: [
+    options: [ 
       "Apt A — $650/mo, 40-min commute",
       "Apt B — $900/mo, 20-min commute",
       "Apt C — $1,300/mo, 5-min commute + amenities",
