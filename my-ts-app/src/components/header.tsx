@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn = false, onLogout }) => {
       <div className="header-container">
         <div className="header-logo" onClick={() => navigate('/')}>
           <span className="logo-icon">🤫</span>
-          <span className="logo-text">Insert Finance Website Name Over Here Samita Bomasamudram</span>
+          <span className="logo-text">Finance Unlocked</span>
         </div>
         <div className="header-logo" onClick={() => navigate('/homepage')}>
             <span className="home-link">Home</span>
@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn = false, onLogout }) => {
         <div className="header-logo" onClick={() => navigate('/dashboard')}>
             <span className="dashboard-link">Dashboard</span>
         </div>
-        <div className="header-logo" onClick={() => navigate('/dashboard')}>
+        <div className="header-logo" onClick={() => navigate('/quiz')}>
             <span className="quiz-link">Quiz</span>
         </div>
 

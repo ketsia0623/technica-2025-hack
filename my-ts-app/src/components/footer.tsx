@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-section">
-          <h3 className="footer-heading">Insert Finance Website Name Over Here Samita Bomasamudram</h3>
+          <h3 className="footer-heading">Finance Unlocked</h3>
           <p className="footer-text">
             Finances and finances and finances and you'll never guess what comes next: finances!
           </p>
