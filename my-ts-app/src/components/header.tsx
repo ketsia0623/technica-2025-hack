@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn = false, onLogout }) => {
       <div className="header-container">
         <div className="header-logo" onClick={() => navigate('/')}>
           <span className="logo-icon">🤫</span>
-          <span className="logo-text">Insert Finance Website Name Over Here Samita Bomasamudram</span>
+          <span className="logo-text">Finance Unlocked</span>
         </div>
         <div className="header-logo" onClick={() => navigate('/homepage')}>
             <span className="home-link">Home</span>
