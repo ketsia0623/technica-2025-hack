@@ -14,7 +14,7 @@
 }
 
 .sim-image {
-  width: 340px;   /* all images same size for alignment */
+  width: 340px;   
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -24,12 +24,12 @@
 }
 
 .sim-image.pumpkin {
-  width: 270px;   /* slightly bigger if desired */
-  margin-bottom: 60px; /* gap between pumpkin and captions */
+  width: 270px;  
+  margin-bottom: 60px; 
 }
 
 .image-caption {
-  margin: 2px 0; /* small gap between lines */
+  margin: 2px 0; 
 }
 
 
