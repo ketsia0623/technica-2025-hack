@@ -13,24 +13,60 @@ type Question = {
 const questions: Question[] = [
   {
     id: 1,
-    question: "Where do you want to live this semester?",
+    question: "Your refund check is $1,200. What’s the best financial move?",
     options: [
-      "Apt A — $650/mo, 40-min commute",
-      "Apt B — $900/mo, 20-min commute",
-      "Apt C — $1,300/mo, 5-min commute + amenities",
+      "Spend it on clothes/shopping",
+      "Save part and use the rest for academic/living expenses",
+      "Put it all into DoorDash & Uber",
+      "Loan it to friends",
     ],
   },
   {
     id: 2,
-    question: "How will you get around?",
-    options: ["Bus Pass — $40/mo", "Used Car — $300/mo + gas", "Rideshare — $120/week"],
+    question:
+      "You’re deciding between two part-time jobs: one pays more but conflicts with study time. What should you consider first?",
+    options: [
+      "Long-term impact on grades",
+      "Which job looks cooler on social media",
+      "Which job gives more free food",
+      "Which job your friend works at",
+    ],
   },
   {
     id: 3,
-    question: "It’s Friday night — what’s the move?",
-    options: ["Cook at home — $12", "One night out — $45", "Full night out — $95"],
+    question:
+      "You have a credit card with a $500 limit and used $450. What should you do?",
+    options: [
+      "Pay just the minimum",
+      "Pay it down ASAP to lower credit utilization",
+      "Open another credit card so you can spend more",
+      "Ignore it",
+    ],
+  },
+  {
+    id: 4,
+    question:
+      "Rent plus utilities is more than expected this month. What’s the best solution?",
+    options: [
+      "Communicate with roommates + adjust budget",
+      "Put everything on a credit card",
+      "Drop your meal plan to $0",
+      "Panic",
+    ],
+  },
+  {
+    id: 5,
+    question:
+      "You’re thinking about internships. What’s one financial reason they matter?",
+    options: [
+      "They pay enough to party",
+      "Experience increases future earning potential",
+      "Free merch",
+      "They ‘look cool’",
+    ],
   },
 ];
+
 
 export default function QuizPage(): JSX.Element {
   const [answers, setAnswers] = useState<Record<number, number | null>>(
