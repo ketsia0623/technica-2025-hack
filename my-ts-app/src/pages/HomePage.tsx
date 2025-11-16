@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import Logo from "../imagess/technica-finance-unlocked.png";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -12,6 +13,12 @@ const HomePage: React.FC = () => {
       <Header />
 
       <div className="main-content">
+
+        {/* Logo Display */}
+        <div className="logo-container">
+          <img src={Logo} alt="Logo" />
+        </div>
+
         <div className="instructions-box">
           <h2>Welcome to Finance Unlocked</h2>
           <p>
