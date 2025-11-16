@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./HomePage.css";
 import Header from "../components/header";
 import Footer from "../components/footer";
-import Logo from "../imagess/technica-finance-unlocked.png";
+import Logo from "../imagess/technica-logo.png";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
