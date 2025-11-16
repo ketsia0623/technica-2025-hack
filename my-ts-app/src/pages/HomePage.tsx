@@ -1,4 +1,3 @@
-// src/pages/HomePage.tsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './HomePage.css';
@@ -12,10 +11,7 @@ const HomePage: React.FC = () => {
     <div className="home-page">
       <Header />
     <div>
-      <h1 style={{ fontSize: '60px', fontWeight: 'bold' }}>
-        FINANCE UNLOCKED
-      </h1>
-
+      
       <h3>
         Master your finances with our comprehensive dashboard and interactive quiz.
       </h3>
