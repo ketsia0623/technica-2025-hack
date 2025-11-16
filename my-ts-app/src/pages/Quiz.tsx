@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { JSX } from "react/jsx-runtime";
-import "./Quiz.css"; // optional if you prefer plain CSS
+import "./Quiz.css"; 
 import Header from "../components/header";
 import Footer from "../components/footer";
 
