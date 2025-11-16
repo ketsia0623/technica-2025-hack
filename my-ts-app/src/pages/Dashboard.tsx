@@ -22,7 +22,6 @@ interface Entry {
 }
 
 export default function Dashboard() {
-  // Load saved entries from localStorage
   const [entriesByDate, setEntriesByDate] = React.useState<Record<string, Entry[]>>(() => {
     const saved = localStorage.getItem("entriesByDate");
     return saved ? JSON.parse(saved) : {};
@@ -33,11 +32,9 @@ export default function Dashboard() {
   );
 
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
-
   const greenShades = ["#82ca9d", "#66bb6a", "#43a047", "#2e7d32", "#1b5e20"];
   const currentEntries = entriesByDate[selectedDate] || [];
 
-  // Helper to format dates like "Nov 15, 2025"
   const formatDate = (dateStr: string) => {
     return new Date(dateStr).toLocaleDateString("en-US", {
       month: "short",
@@ -46,7 +43,6 @@ export default function Dashboard() {
     });
   };
 
-  // Helper to add/subtract days
   const addDays = (dateStr: string, days: number) => {
     const date = new Date(dateStr);
     date.setDate(date.getDate() + days);
@@ -56,7 +52,6 @@ export default function Dashboard() {
   const handleNextDay = () => setSelectedDate(prev => addDays(prev, 1));
   const handlePrevDay = () => setSelectedDate(prev => addDays(prev, -1));
 
-  // Save entries to state and localStorage
   const saveEntries = (newEntries: Record<string, Entry[]>) => {
     setEntriesByDate(newEntries);
     localStorage.setItem("entriesByDate", JSON.stringify(newEntries));
@@ -99,7 +94,6 @@ export default function Dashboard() {
     }
   };
 
-  // Daily bar chart data
   const chartData = currentEntries
     .filter(e => e.action.trim() !== "" || e.amount.trim() !== "")
     .map((e, index) => ({
@@ -112,16 +106,15 @@ export default function Dashboard() {
     0
   );
 
-  // Monthly line chart data
   const getMonthlyData = () => {
     const totals: { date: string; total: number }[] = [];
     const today = new Date(selectedDate);
     const year = today.getFullYear();
-    const month = today.getMonth(); // 0-indexed
+    const month = today.getMonth();
 
     for (let day = 1; day <= 31; day++) {
       const date = new Date(year, month, day);
-      if (date.getMonth() !== month) break; // stop at end of month
+      if (date.getMonth() !== month) break;
       const dateStr = date.toISOString().split("T")[0];
       const dailyEntries = entriesByDate[dateStr] || [];
       const dailyTotal = dailyEntries.reduce((sum, e) => sum + parseFloat(e.amount || "0"), 0);
@@ -183,7 +176,6 @@ export default function Dashboard() {
 
         <h3>Total Spent on {formatDate(selectedDate)}: ${total.toFixed(2)}</h3>
 
-        {/* Charts side by side */}
         <div className="charts-wrapper">
           <div className="bar-chart-container">
             <h3>Daily Transactions</h3>
@@ -191,8 +183,8 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" stroke="#145214" />
-                  <YAxis stroke="#145214" />
+                  <XAxis dataKey="name" stroke="#145214" label={{ value: 'Transaction', position: 'insideBottom', offset: -5 }} />
+                  <YAxis stroke="#145214" label={{ value: 'Amount ($)', angle: -90, position: 'insideLeft', offset: 10 }} />
                   <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
                   <Bar dataKey="amount">
                     {chartData.map((entry, index) => (
@@ -214,8 +206,8 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={getMonthlyData()} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" stroke="#145214" />
-                <YAxis stroke="#145214" />
+                <XAxis dataKey="date" stroke="#145214" label={{ value: 'Day of the Month', position: 'insideBottom', offset: -5 }} />
+                <YAxis stroke="#145214" label={{ value: 'Total ($)', angle: -90, position: 'insideLeft', offset: 10 }} />
                 <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
                 <Line type="monotone" dataKey="total" stroke="#82ca9d" strokeWidth={3} />
               </LineChart>
