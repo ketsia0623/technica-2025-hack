@@ -11,22 +11,22 @@ const Sim: React.FC = () => {
   return (
     <div className="simmer-page">
       <Header />
-    <div className="sim-page">
-      <strong style={{ fontSize: "100px", display: "block" }}>Simulation</strong>
-      <header style={{ fontSize: "50px", marginBottom: "40px" }}>
-        Choose your character:
-      </header>
+      <div className="sim-page">
+        <strong style={{ fontSize: "100px", display: "block" }}>Simulation</strong>
+        <header style={{ fontSize: "50px", marginBottom: "40px" }}>
+          Choose your character:
+        </header>
 
-      {/* Character images */}
-      <div className="sim-container">
-      <Images onClick={() => navigate("/quiz")} />
-    
-    </div>
-
-    
-    </div>
-    <Footer />
-
+        {/* Character images */}
+        <div className="sim-container">
+          <Images 
+            onBatClick={() => navigate("/quiz1")}
+            onGhostClick={() => navigate("/quiz2")}
+            onPumpkinClick={() => navigate("/quiz3")}
+          />
+        </div>
+      </div>
+      <Footer />
     </div>
   );
 };
