@@ -1,9 +1,10 @@
 .header {
-  background: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: #54b859; /* soft green like dashboard/quiz */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 100;
+  border-radius: 0 0 12px 12px; /* subtle rounded bottom edges */
 }
 
 .header-container {
@@ -29,12 +30,13 @@
 
 .logo-icon {
   font-size: 1.8rem;
+  color: #fff; /* logo icon matches light theme */
 }
 
 .logo-text {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #667eea;
+  color: #fff; /* light text for contrast */
 }
 
 .header-nav {
@@ -45,8 +47,8 @@
 
 .nav-link {
   padding: 10px 20px;
-  background: transparent;
-  color: #555;
+  background: #54b859; /* lighter soft green */
+  color: #fff;          /* light text */
   border: none;
   border-radius: 6px;
   cursor: pointer;
@@ -56,18 +58,18 @@
 }
 
 .nav-link:hover {
-  background: #f0f2ff;
-  color: #667eea;
+  background: #68e36e; /* darker green on hover */
+  color: white;
 }
 
 .nav-link.active {
-  background: #667eea;
+  background: #2e7d32; /* even darker green for active */
   color: white;
 }
 
 .logout-button {
   padding: 10px 20px;
-  background: #f44336;
+  background: #e53935; /* red button */
   color: white;
   border: none;
   border-radius: 6px;
@@ -78,12 +80,12 @@
 }
 
 .logout-button:hover {
-  background: #d32f2f;
+  background: #b71c1c;
 }
 
 .login-nav-button {
   padding: 10px 25px;
-  background: #667eea;
+  background: #116110; /* matching green tone */
   color: white;
   border: none;
   border-radius: 6px;
@@ -94,7 +96,7 @@
 }
 
 .login-nav-button:hover {
-  background: #5568d3;
+  background: #2e7d32;
 }
 
 @media (max-width: 768px) {
