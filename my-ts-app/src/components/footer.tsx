@@ -27,8 +27,8 @@ const Footer: React.FC = () => {
         <div className="footer-section">
           <h4 className="footer-subheading">Resources</h4>
           <ul className="footer-links">
-            <li><a href="#about">About Us</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="/aboutus">About Us</a></li>
+            <li><a href="/aboutus">Contact</a></li>
             <li><a href="#privacy">Privacy Policy</a></li>
           </ul>
         </div>

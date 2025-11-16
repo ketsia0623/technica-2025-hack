@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import Dashboard from './pages/Dashboard';
+import AboutUs from './pages/aboutus'
 import Quiz from './pages/Quiz';
 import Sim from './pages/Sim';
 import './App.css';
@@ -16,6 +17,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/homepage" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/aboutus" element={<AboutUs />} />
+
         
         {/* Protected routes - require login */}
         <Route 
