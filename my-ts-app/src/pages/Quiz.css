@@ -1,10 +1,9 @@
-
 .quiz-container {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgb(115, 205, 143);
+  background: #43a047; /* changed to match .sim-page background */
   padding: 20px;
 }
 
@@ -51,8 +50,6 @@
   background: #54b859;
   color: white;
 }
-
-
 
 .quiz-option:hover {
   background: #0e4f22;
