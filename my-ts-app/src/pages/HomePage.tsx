@@ -21,9 +21,9 @@ const HomePage: React.FC = () => {
 
         <div className="instructions-box">
           <h2>Welcome to Finance Unlocked</h2>
-          <p>
-            Track your spending, learn smart money habits, and explore monthly insights.
-          </p>
+          <h3>
+            The key to your financial future.
+          </h3>
         </div>
 
         <div className="home-buttons">
