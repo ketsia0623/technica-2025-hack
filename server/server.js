@@ -64,7 +64,7 @@ app.post("/api/ai/mentor", async (req, res) => {
 
     // REST call to Generative Language API
     const GEMINI_MODEL = process.env.GEMINI_MODEL || "text-bison-001";
-    const url = `https://generativelanguage.googleapis.com/v1beta/${GEMINI_MODEL}:generateText`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateText`;
 
 
     const payload = {
