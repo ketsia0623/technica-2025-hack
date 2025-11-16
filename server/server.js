@@ -63,14 +63,17 @@ app.post("/api/ai/mentor", async (req, res) => {
     const prompt = buildPromptFromAnswers(body);
 
     // REST call to Generative Language API
+    const GEMINI_MODEL = process.env.GEMINI_MODEL || "text-bison-001";
     const url = `https://generativelanguage.googleapis.com/v1beta/${GEMINI_MODEL}:generateText`;
 
+
     const payload = {
-      // API expects contents array with parts text
-      contents: [{ parts: [{ text: prompt }] }],
-      // You can tune temperature / max output tokens here if supported by your model/version
-      // e.g. temperature: 0.2,
+    prompt: prompt,
+    temperature: 0.2,
+    candidateCount: 1,
+    maxOutputTokens: 500
     };
+
 
     const response = await axios.post(url, payload, {
       headers: {
