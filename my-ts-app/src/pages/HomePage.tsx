@@ -7,9 +7,7 @@ const HomePage: React.FC = () => {
 
   return (
     <div>
-      <h1 style={{ fontSize: '60px', fontWeight: 'bold' }}>
-        FINANCE UNLOCKED
-      </h1>
+      
 
       <h3>
         Master your finances with our comprehensive dashboard and interactive quiz.
