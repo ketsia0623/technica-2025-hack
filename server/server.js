@@ -73,11 +73,11 @@ app.post("/api/ai/mentor", async (req, res) => {
             }
         ],
         generationConfig: {
-            temperature: 0.2,
+            temperature: 0.15,
             topP: 0.95,
-            topK: 64,
+            topK: 40,
             candidateCount: 1,
-            maxOutputTokens: 800
+            maxOutputTokens: 2000
         }
     };
 
@@ -107,6 +107,37 @@ app.post("/api/ai/mentor", async (req, res) => {
     console.error("AI call error:", err?.response?.data || err.message || err);
     res.status(500).json({ ok: false, error: err?.response?.data || String(err) });
   }
+
+  /** Helper: simple local fallback that produces a reasonable JSON from the answers */
+    function buildFallbackFromAnswers(answers) {
+    // simplistic heuristics — customize to match your scenarios
+    const summary = "We couldn't get a full AI plan; here is a quick local suggestion.";
+    const top_actions = [];
+    // example rules: if user picked expensive apartment (choice 2) recommend saving
+    if (answers[1] === 2) {
+        top_actions.push({
+        title: "Consider cheaper housing",
+        description: "Your housing choice is expensive; move to a cheaper option or get a roommate.",
+        monthly_savings: 400
+        });
+    }
+    if (answers[3] === 0) {
+        top_actions.push({
+        title: "Cook more",
+        description: "Cooking at home saves money compared to nights out.",
+        monthly_savings: 80
+        });
+    }
+    if (top_actions.length === 0) {
+        top_actions.push({
+        title: "Track your spending",
+        description: "Start tracking expenses for two weeks to find easy cuts.",
+        monthly_savings: null
+        });
+    }
+    const two_step_lesson = ["Track all spending for 2 weeks", "Set a simple monthly budget and automate $50 to savings"];
+    return { summary, top_actions, two_step_lesson };
+    }
 });
 
 /**

@@ -61,49 +61,49 @@ export default function QuizPage(): JSX.Element {
 
   const allAnswered = Object.values(answers).every((v) => v !== null);
 
+  // ---------------------------
+  // AI Mentor call function
+  // ---------------------------
   async function sendToMentor(
     answersPayload: Record<number, number | null>,
     meta: Record<string, any> = {}
   ) {
-    const body = { answers: answersPayload, meta };
+    try {
+      const body = { answers: answersPayload, meta };
+      const resp = await fetch("http://localhost:5000/api/ai/mentor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-    const resp = await fetch("/api/ai/mentor", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
+      if (!resp.ok) {
+        const txt = await resp.text();
+        throw new Error(`Server error: ${resp.status} ${txt}`);
+      }
 
-    if (!resp.ok) {
-      const txt = await resp.text();
-      throw new Error(`Server error: ${resp.status} ${txt}`);
+      const data = await resp.json();
+      if (!data.ok) throw new Error(data.error || "AI endpoint returned an error");
+
+      return data.result;
+    } catch (err: any) {
+      console.error("sendToMentor error", err);
+      throw err;
     }
-
-    const data = await resp.json();
-    // expect { ok: true, result: {...} } from the server example earlier
-    if (!data.ok) {
-      throw new Error(data.error || "AI endpoint returned an error");
-    }
-    return data.result;
   }
 
-  // This handler is used by the main Submit button.
+  // ---------------------------
+  // Submit handler
+  // ---------------------------
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
     try {
-      // show summary panel
       setShowSummary(true);
 
-      // call backend (this will be proxied to http://localhost:5000 in dev)
-      const result = await sendToMentor(answers, {
-        // optional metadata you can send (example)
-        userAgent: navigator.userAgent,
-      });
-
-      // Save parsed AI result in state to render
+      // send answers + optional metadata to backend
+      const result = await sendToMentor(answers, { userAgent: navigator.userAgent });
       setAiResult(result);
     } catch (err: any) {
-      console.error("sendToMentor error", err);
       setError(err.message || "Unknown error");
       setAiResult(null);
     } finally {
@@ -111,10 +111,8 @@ export default function QuizPage(): JSX.Element {
     }
   };
 
-  // Optional: separate button inside the summary to (re)send to mentor.
   const handleSendFromSummary = async () => {
-    // If we've already got aiResult, clicking can re-generate (or you can skip)
-    await handleSubmit();
+    await handleSubmit(); // re-generate AI result
   };
 
   const handleReset = () => {
@@ -129,6 +127,9 @@ export default function QuizPage(): JSX.Element {
     setError(null);
   };
 
+  // ---------------------------
+  // JSX
+  // ---------------------------
   return (
     <div className="quiz-page">
       <Header />
@@ -149,7 +150,7 @@ export default function QuizPage(): JSX.Element {
             <div className="quiz-tip">Tip: Your choices will feed the AI Mentor</div>
           </div>
 
-          {/* Questions area - will scroll if many */}
+          {/* Questions area */}
           <div className="quiz-questions-wrapper">
             {questions.map((q) => (
               <div key={q.id} className="quiz-question-box">
@@ -183,7 +184,7 @@ export default function QuizPage(): JSX.Element {
             ))}
           </div>
 
-          {/* Footer actions */}
+          {/* Footer */}
           <div className="quiz-footer">
             <div className="quiz-status">
               {allAnswered ? (
@@ -242,7 +243,6 @@ export default function QuizPage(): JSX.Element {
               </ul>
 
               <div className="quiz-summary-actions">
-                {/* This button now triggers the actual AI call — or re-run it */}
                 <button
                   className="quiz-send-mentor"
                   onClick={handleSendFromSummary}
@@ -264,7 +264,6 @@ export default function QuizPage(): JSX.Element {
 
                 {aiResult && (
                   <div className="quiz-ai-result" style={{ marginTop: 12 }}>
-                    {/* If your server returns structured JSON with keys */}
                     {aiResult.summary && (
                       <div style={{ marginBottom: 8 }}>
                         <strong>Summary:</strong> {aiResult.summary}
@@ -278,9 +277,7 @@ export default function QuizPage(): JSX.Element {
                           {aiResult.top_actions.map((a: any, idx: number) => (
                             <li key={idx}>
                               <strong>{a.title}</strong>: {a.description}
-                              {typeof a.monthly_savings === "number" && (
-                                <> — save ${a.monthly_savings}/mo</>
-                              )}
+                              {typeof a.monthly_savings === "number" && <> — save ${a.monthly_savings}/mo</>}
                             </li>
                           ))}
                         </ul>
@@ -298,13 +295,10 @@ export default function QuizPage(): JSX.Element {
                       </div>
                     )}
 
-                    {/* fallback display if server returned raw/unknown shape */}
                     {!aiResult.summary &&
                       !aiResult.top_actions &&
                       !aiResult.two_step_lesson && (
-                        <pre style={{ whiteSpace: "pre-wrap" }}>
-                          {JSON.stringify(aiResult, null, 2)}
-                        </pre>
+                        <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(aiResult, null, 2)}</pre>
                       )}
                   </div>
                 )}
