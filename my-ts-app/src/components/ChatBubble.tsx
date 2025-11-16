@@ -2,6 +2,26 @@
 import { useState } from "react";
 import { sendChatMessage } from "../api/chatAPI";
 
+const SYSTEM_PROMPT = `
+You are FINCOACH, an AI personal finance assistant for Gen Z.
+Your job is to:
+- analyze budgets
+- identify overspending
+- calculate savings plans
+- explain financial concepts clearly
+- create debt payoff strategies (avalanche & snowball)
+- give step-by-step, technical advice
+- ALWAYS return short, direct answers with numbers.
+
+Rules:
+- No fluff.
+- Always explain “why”.
+- Use math when applicable.
+- If the user gives income, calculate a 50/30/20 budget.
+- If the user mentions debt, ask for interest rates and balances.
+`;
+
+
 // Define message type
 type ChatMessage = {
   role: "system" | "user" | "assistant";
@@ -10,11 +30,38 @@ type ChatMessage = {
 
 export default function ChatBubble() {
   const [open, setOpen] = useState(false);
+  
   const [messages, setMessages] = useState<ChatMessage[]>([
-    { role: "system", content: "You are a helpful financial coach." }
+  { role: "system", content: SYSTEM_PROMPT }
   ]);
+
+
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  function ruleEngine(input: string): string | null {
+    const lower = input.toLowerCase();
+
+    if (lower.includes("overspent") || lower.includes("over budget")) {
+      return "Which category do you want help analyzing? I can break down your spending and suggest fixes.";
+    }
+
+    if (lower.includes("budget")) {
+      return "What's your monthly income? I can calculate a 50/30/20 budget for you.";
+    }
+
+    if (lower.includes("save") || lower.includes("savings")) {
+      return "What's your current income and how much do you want to save? I can project your timeline.";
+    }
+
+    if (lower.includes("debt") || lower.includes("credit card") || lower.includes("interest")) {
+      return "Give me your debt balances + interest rates, and I'll create an avalanche vs snowball plan.";
+    }
+
+    return null;
+  }
+
+
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -28,6 +75,14 @@ export default function ChatBubble() {
     setInput("");
     setLoading(true);
 
+    // 🔥 Run the rule engine BEFORE calling your backend  
+    const ruleResponse = ruleEngine(input);
+    if (ruleResponse) {
+      setMessages([...newMessages, { role: "assistant", content: ruleResponse }]);
+      setLoading(false);
+      return;
+    }
+
     try {
       const reply = await sendChatMessage(newMessages);
       setMessages([...newMessages, { role: "assistant", content: reply }]);
@@ -38,6 +93,7 @@ export default function ChatBubble() {
       setLoading(false);
     }
   };
+
 
   return (
     <>
