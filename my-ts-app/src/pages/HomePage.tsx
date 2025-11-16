@@ -10,7 +10,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="home-page">
       <Header />
-    <div>
+
       <div className="main-content">
         <div className="instructions-box">
           <h2>Welcome to Finance Unlocked</h2>
@@ -27,8 +27,6 @@ const HomePage: React.FC = () => {
       </div>
 
       <Footer />
-    </div>
-    <Footer />
     </div>
   );
 };
