@@ -43,6 +43,8 @@ const questions: Question[] = [
   // Add the rest of your questions here...
 ];
 
+
+
 export default function QuizPage(): JSX.Element {
   const [answers, setAnswers] = useState<Record<number, number | null>>(
     () =>
@@ -53,6 +55,9 @@ export default function QuizPage(): JSX.Element {
   );
 
   const [showSummary, setShowSummary] = useState(false);
+  const [aiResult, setAiResult] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSelect = (questionId: number, optionIndex: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: optionIndex }));
@@ -60,9 +65,52 @@ export default function QuizPage(): JSX.Element {
 
   const allAnswered = Object.values(answers).every((v) => v !== null);
 
-  const handleSubmit = () => {
+  async function sendToMentor(
+  answersPayload: Record<number, number | null>,
+  meta: Record<string, any> = {}
+) {
+  const body = { answers: answersPayload, meta };
+
+  const resp = await fetch("/api/ai/mentor", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  if (!resp.ok) {
+    const txt = await resp.text();
+    throw new Error(`Server error: ${resp.status} ${txt}`);
+  }
+
+  const data = await resp.json();
+  // expect { ok: true, result: {...} } from the server example earlier
+  if (!data.ok) {
+    throw new Error(data.error || "AI endpoint returned an error");
+  }
+  return data.result;
+  }
+
+  const handleSubmit = async () => {
+  setLoading(true);
+  setError(null);
+  try {
+    // show summary panel
     setShowSummary(true);
-    // Hook: send 'answers' to AI Mentor or scoring function here
+
+    // call backend (this will be proxied to http://localhost:5000 in dev)
+    const result = await sendToMentor(answers, {
+      // optional metadata you can send (example)
+      userAgent: navigator.userAgent,
+    });
+
+    // Save parsed AI result in state to render
+    setAiResult(result);
+  } catch (err: any) {
+    console.error("sendToMentor error", err);
+    setError(err.message || "Unknown error");
+  } finally {
+    setLoading(false);
+  }
   };
 
   const handleReset = () => {
