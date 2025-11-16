@@ -13,7 +13,7 @@ app.use(bodyParser.json({ limit: "500kb" }));
 
 const PORT = process.env.PORT || 5000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "text-bison-001";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-pro";
 
 if (!GEMINI_API_KEY) {
   console.error("Missing GEMINI_API_KEY in environment. See .env");
@@ -82,10 +82,8 @@ app.post("/api/ai/mentor", async (req, res) => {
     });
 
     // parse response
-    const text =
-      response.data?.candidates?.[0]?.content?.[0]?.text ||
-      response.data?.candidates?.[0]?.output ||
-      JSON.stringify(response.data);
+    const text = response.data?.candidates?.[0]?.content?.[0]?.text || JSON.stringify(response.data);
+
 
     let jsonOut = null;
     try {
