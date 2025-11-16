@@ -55,7 +55,7 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  background-color: #f9f9f9;
+  background-color: #54b859;
   padding: 1.5rem;
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -63,7 +63,7 @@
 }
 
 .image-wrapper:hover {
-  border-color: #43a047;
+  border-color: #54b859;
   box-shadow: 0 4px 12px rgba(67, 160, 71, 0.2);
   transform: translateY(-5px);
 }
