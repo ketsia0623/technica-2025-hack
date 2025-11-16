@@ -1,6 +1,8 @@
-// src/pages/HomePage.tsx
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./HomePage.css";
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,20 +23,7 @@ const HomePage: React.FC = () => {
       </div>
     </div>
 
-
-      <button onClick={() => navigate('/login')}>
-        Login
-      </button>
-      <button
-        onClick={() => navigate('/dashboard')}
-      >
-        Dashboard
-      </button>
-      <button
-        onClick={() => navigate('/quiz')}
-      >
-        Quiz
-      </button>
+      <Footer />
     </div>
   );
 };

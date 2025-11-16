@@ -1,0 +1,69 @@
+.about-page {
+  background: rgb(115, 205, 143); /* same as login bg */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.about-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.about-title {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #1a1a1a;
+}
+
+.about-subtitle {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+}
+
+.about-card {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  text-align: left;
+}
+
+.profile-name {
+  font-size: 1.4rem;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #116110;
+}
+
+.profile-role {
+  font-size: 1.1rem;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.profile-bio {
+  color: #666;
+  line-height: 1.5;
+}
+
+@media (max-width: 600px) {
+  .about-container {
+    margin-top: 20px;
+    padding: 15px;
+  }
+
+  .about-title {
+    font-size: 2rem;
+  }
+}

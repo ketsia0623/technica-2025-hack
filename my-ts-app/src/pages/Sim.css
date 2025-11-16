@@ -1,9 +1,53 @@
+/* ================================
+   Sim Page Container
+   ================================ */
+.sim-page {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+/* ================================
+   Title & Header
+   ================================ */
+.sim-page strong {
+  font-size: 3.5rem;
+  display: block;
+  color: #43a047;
+  margin-bottom: 1rem;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+
+.sim-page header {
+  font-size: 1.8rem;
+  margin-bottom: 2.5rem;
+  color: #333;
+  font-weight: 600;
+}
+
+/* ================================
+   Character Images Section
+   ================================ */
+.sim-container {
+  background-color: #ffffff;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
 .images-row {
   display: flex;
   justify-content: center;
-  gap: 40px; /* space between images */
+  gap: 40px;
   align-items: flex-start;
   margin-top: 30px;
+  flex-wrap: wrap;
 }
 
 .image-wrapper {
@@ -11,12 +55,27 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  background-color: #f9f9f9;
+  padding: 1.5rem;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
 }
 
+.image-wrapper:hover {
+  border-color: #43a047;
+  box-shadow: 0 4px 12px rgba(67, 160, 71, 0.2);
+  transform: translateY(-5px);
+}
+
+/* ================================
+   Images
+   ================================ */
 .sim-image {
-  width: 340px;   
+  width: 340px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: transform 0.2s ease;
+  border-radius: 8px;
 }
 
 .sim-image:hover {
@@ -24,13 +83,67 @@
 }
 
 .sim-image.pumpkin {
-  width: 270px;  
-  margin-bottom: 60px; 
+  width: 270px;
+  margin-bottom: 60px;
 }
 
+/* ================================
+   Image Captions
+   ================================ */
 .image-caption {
-  margin: 2px 0; 
+  margin: 0.25rem 0 0 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ================================
+   Responsive Design
+   ================================ */
+@media (max-width: 900px) {
+  .sim-page strong {
+    font-size: 2.5rem;
+  }
+
+  .sim-page header {
+    font-size: 1.5rem;
+  }
+
+  .images-row {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .sim-image {
+    width: 280px;
+  }
+
+  .sim-image.pumpkin {
+    width: 220px;
+  }
+}
+
+@media (max-width: 600px) {
+  .sim-page {
+    padding: 1rem;
+  }
+
+  .sim-container {
+    padding: 1rem;
+  }
+
+  .sim-page strong {
+    font-size: 2rem;
+  }
+
+  .sim-page header {
+    font-size: 1.3rem;
+  }
 }
 
 
 
+
+caption-container {
+  margin: 0.25rem 0 0 0;
+}

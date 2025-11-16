@@ -11,6 +11,40 @@
 }
 
 /* ================================
+   Title
+   ================================ */
+h2 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+/* ================================
+   Buttons Under Title
+   ================================ */
+.dashboard-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+
+/* Import/Generate Buttons (match Prev/Next styles) */
+.import-btn {
+  padding: 0.5rem 1rem;
+  background-color: #43a047;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s ease;
+}
+
+.import-btn:hover {
+  background-color: #2e7d32;
+}
+
+/* ================================
    Day Navigation
    ================================ */
 .day-navigation {
@@ -28,6 +62,11 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.day-navigation button:hover {
+  background-color: #2e7d32;
 }
 
 .day-navigation span {
@@ -67,6 +106,7 @@
   cursor: pointer;
 }
 
+/* Add Entry Button */
 .add-entry-btn {
   margin-top: 0.5rem;
   padding: 0.6rem 1.2rem;
@@ -75,6 +115,9 @@
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ================================
@@ -119,20 +162,16 @@ h3 {
   margin-top: 1rem;
 }
 
-h2 {
-  text-align: center;
-}
-
-.add-entry-btn {
-  display: block;
-  margin: 1rem auto 0 auto;
-}
-
 /* ================================
    Responsive Adjustments
    ================================ */
 @media (max-width: 900px) {
   .charts-wrapper {
     flex-direction: column;
+  }
+
+  .dashboard-buttons {
+    flex-direction: column;
+    align-items: center;
   }
 }
