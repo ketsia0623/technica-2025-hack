@@ -63,7 +63,7 @@ app.post("/api/ai/mentor", async (req, res) => {
     const prompt = buildPromptFromAnswers(body);
 
     // REST call to Generative Language API
-    const url = `https://generativelanguage.googleapis.com/v1beta/${GEMINI_MODEL}:generateContent`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/${GEMINI_MODEL}:generateText`;
 
     const payload = {
       // API expects contents array with parts text
