@@ -2,25 +2,6 @@
 import { useState } from "react";
 import { sendChatMessage } from "../api/chatAPI";
 
-const SYSTEM_PROMPT = `
-You are FINCOACH, an AI personal finance assistant for Gen Z.
-Your job is to:
-- analyze budgets
-- identify overspending
-- calculate savings plans
-- explain financial concepts clearly
-- create debt payoff strategies (avalanche & snowball)
-- give step-by-step, technical advice
-- ALWAYS return short, direct answers with numbers.
-
-Rules:
-- No fluff.
-- Always explain “why”.
-- Use math when applicable.
-- If the user gives income, calculate a 50/30/20 budget.
-- If the user mentions debt, ask for interest rates and balances.
-`;
-
 
 // Define message type
 type ChatMessage = {
@@ -31,9 +12,7 @@ type ChatMessage = {
 export default function ChatBubble() {
   const [open, setOpen] = useState(false);
   
-  const [messages, setMessages] = useState<ChatMessage[]>([
-  { role: "system", content: SYSTEM_PROMPT }
-  ]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
 
 
   const [input, setInput] = useState("");

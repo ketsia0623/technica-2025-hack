@@ -19,9 +19,34 @@ app.post("/chat", async (req, res) => {
   try {
     const { messages } = req.body;
 
+    const systemPrompt = {
+      role: "system",
+      content: `
+You are FINCOACH, an AI personal finance assistant for Gen Z.
+Your job is to:
+- analyze budgets
+- identify overspending
+- calculate savings plans
+- explain financial concepts clearly
+- create debt payoff strategies (avalanche & snowball)
+- give step-by-step, technical advice
+- ALWAYS return short, direct answers with numbers.
+
+Rules:
+- No fluff.
+- Always explain why.
+- Use math when applicable.
+- If the user gives income, calculate a 50/30/20 budget.
+- If the user mentions debt, ask for balances + interest rates.
+`
+    };
+
     const completion = await client.chat.completions.create({
       model: "gpt-4.1-mini",
-      messages: messages,
+      messages: [
+        systemPrompt,
+        ...messages   // ← only user + assistant messages from frontend
+      ],
     });
 
     res.json({
@@ -31,8 +56,4 @@ app.post("/chat", async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Chat error" });
   }
-});
-
-app.listen(3001, () => {
-  console.log("Server running on http://localhost:3001");
 });
