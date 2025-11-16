@@ -116,3 +116,8 @@ app.post("/api/ai/mentor", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Backend listening on http://localhost:${PORT}`);
 });
+
+app.get("/test", async (req, res) => {
+  res.json({ message: "Backend is running!" });
+});
+
