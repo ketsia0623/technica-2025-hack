@@ -120,7 +120,7 @@ export default function Dashboard() {
     return totals;
   };
 
-  // ✅ Fake Nessie data import
+  // Nessie data import
   const importFromNessie = async () => {
     try {
       const mapped: Entry[] = [
@@ -136,7 +136,7 @@ export default function Dashboard() {
       });
 
       saveEntries(newEntries);
-      alert("Imported fake transactions!");
+      alert("Imported Nessie transactions!");
     } catch (err) {
       console.error(err);
       alert("Failed to import transactions");
@@ -156,7 +156,7 @@ export default function Dashboard() {
       ];
     }
     saveEntries(newEntries);
-    alert("Generated fake month of transactions!");
+    alert("Generated sample month of transactions!");
   };
 
   const getProgressColor = (amount: number) => {
@@ -183,7 +183,7 @@ export default function Dashboard() {
             Import Nessie Bank Data
           </button>
           <button className="import-btn" onClick={generateFakeMonth}>
-            Generate Fake Month
+            Generate Data for a Month
           </button>
           </div>
 
