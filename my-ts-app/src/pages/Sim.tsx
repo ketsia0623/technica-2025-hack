@@ -1,16 +1,26 @@
-import Header from "../components/header";
-import Footer from "../components/footer";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import "./Sim.css";
+import Images from "./images";
 
-export default function Sim() {
+const Sim: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="login-page">
-      <Header />
-    <div>
-      {/* Sim content */}
-      <strong style = {{fontSize: "100px", marginTop: "1000px"}}>Simulation</strong>
-      <header style = {{fontSize: "50px"}}> Choose your character:</header>
+    <div className="sim-page">
+      <strong style={{ fontSize: "100px", display: "block" }}>Simulation</strong>
+      <header style={{ fontSize: "50px", marginBottom: "40px" }}>
+        Choose your character:
+      </header>
+
+      {/* Character images */}
+      <div className="sim-container">
+      <Images onClick={() => navigate("/quiz")} />
+    
     </div>
-    <Footer />
+
     </div>
   );
-}
+};
+
+export default Sim;
