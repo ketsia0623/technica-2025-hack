@@ -91,78 +91,91 @@ export default function Dashboard() {
 
   return (
     <div className="login-page">
-        <Header />
-    <div className="dashboard-container">
-      <h2>
-        Daily Spending Dashboard &nbsp;
-        <input
-          type="date"
-          value={selectedDate}
-          onChange={e => setSelectedDate(e.target.value)}
-          className="header-date-picker"
-        />
-      </h2>
+      <Header />
 
-      <div className="day-navigation">
-        <button onClick={handlePrevDay}>Prev</button>
-        <span>{selectedDate}</span>
-        <button onClick={handleNextDay}>Next</button>
+      <div className="dashboard-container">
+        <h2>
+          Daily Spending Dashboard &nbsp;
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={e => setSelectedDate(e.target.value)}
+            className="header-date-picker"
+          />
+        </h2>
+
+        <div className="day-navigation">
+          <button onClick={handlePrevDay}>Prev</button>
+          <span>{selectedDate}</span>
+          <button onClick={handleNextDay}>Next</button>
+        </div>
+
+        {currentEntries.map((entry, index) => (
+          <div key={index} className="entry-row">
+            <input
+              type="text"
+              placeholder="Enter your transaction"
+              value={entry.action}
+              onChange={e => handleChangeAction(index, e.target.value)}
+              onKeyDown={e => handleKeyDown(e, index)}
+              ref={el => {
+                inputRefs.current[index] = el;
+              }}
+              className="entry-action"
+            />
+            <input
+              type="text"
+              placeholder="$"
+              value={entry.amount}
+              onChange={e => handleChangeAmount(index, e.target.value)}
+              onKeyDown={e => handleKeyDown(e, index)}
+              className="entry-amount"
+            />
+            <button className="remove-btn" onClick={() => handleRemoveEntry(index)}>
+              Remove
+            </button>
+          </div>
+        ))}
+
+        <button className="add-entry-btn" onClick={handleAddEntry}>Add Entry</button>
+
+        <hr />
+
+        <h3>Total Spent on {selectedDate}: ${total.toFixed(2)}</h3>
+
+        <h3>Transactions Bar Chart</h3>
+        {chartData.length > 0 ? (
+          <div className="bar-chart-container">
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+
+                {/* ← UPDATED: horizontal labels */}
+                <XAxis 
+                  dataKey="name" 
+                  stroke="#145214"
+                />
+
+                <YAxis stroke="#145214" />
+                <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
+
+                <Bar dataKey="amount">
+                  {chartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={greenShades[index % greenShades.length]}
+                    />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <p className="no-transactions">No transactions for this day</p>
+        )}
       </div>
 
-      {currentEntries.map((entry, index) => (
-        <div key={index} className="entry-row">
-          <input
-            type="text"
-            placeholder="Enter your transaction"
-            value={entry.action}
-            onChange={e => handleChangeAction(index, e.target.value)}
-            onKeyDown={e => handleKeyDown(e, index)}
-            ref={el => { inputRefs.current[index] = el; }}
-            className="entry-action"
-          />
-          <input
-            type="text"
-            placeholder="$"
-            value={entry.amount}
-            onChange={e => handleChangeAmount(index, e.target.value)}
-            onKeyDown={e => handleKeyDown(e, index)}
-            className="entry-amount"
-          />
-          <button className="remove-btn" onClick={() => handleRemoveEntry(index)}>Remove</button>
-        </div>
-      ))}
-
-      <button className="add-entry-btn" onClick={handleAddEntry}>Add Entry</button>
-
-      <hr />
-
-      <h3>Total Spent on {selectedDate}: ${total.toFixed(2)}</h3>
-
-      <h3>Transactions Bar Chart</h3>
-      {chartData.length > 0 ? (
-        <div className="bar-chart-container">
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" stroke="#145214" angle={-30} textAnchor="end" />
-              <YAxis stroke="#145214" />
-              <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
-              <Bar dataKey="amount">
-                {chartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={greenShades[index % greenShades.length]}
-                  />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      ) : (
-        <p className="no-transactions">No transactions for this day</p>
-      )}
-    </div>
-    <Footer />
+      <Footer />
     </div>
   );
 }
