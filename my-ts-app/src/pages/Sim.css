@@ -1,3 +1,21 @@
-button {
-    background: #4455aa;
+.sim-page {
+  text-align: center;
+  padding-top: 50px;
+}
+
+.sim-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px; /* space between images */
+}
+
+.sim-image {
+  width: 250px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.sim-image:hover {
+  transform: scale(1.05);
 }
