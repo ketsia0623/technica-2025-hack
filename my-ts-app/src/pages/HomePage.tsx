@@ -9,11 +9,11 @@ const HomePage: React.FC = () => {
     <div className="login-page">
         <Header />
     <div>
-      <h1 style={{ fontSize: '60px', fontWeight: 'bold' }}>
+      <h1 style={{ fontSize: '60px', fontWeight: 'bold', textAlign: 'center', marginTop: '50px' }}>
         FINANCE UNLOCKED
       </h1>
 
-      <h3>
+      <h3 style={{textAlign: 'center', marginTop: '20px', marginBottom: '40px'}}>
         Master your finances with our comprehensive dashboard and interactive quiz.
       </h3>
       {/* Your box */}
