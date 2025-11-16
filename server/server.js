@@ -4,27 +4,26 @@ const cors = require("cors");
 const axios = require("axios");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
+
 dotenv.config();
 
 const app = express();
-app.use(cors()); // you can lock this down to your CRA origin when deployed
+app.use(cors()); // you can restrict to your CRA origin in production
 app.use(bodyParser.json({ limit: "500kb" }));
 
 const PORT = process.env.PORT || 5000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "models/gemini-1.0";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "text-bison-001";
 
 if (!GEMINI_API_KEY) {
-  console.error("Missing GEMINI_API_KEY in environment. See .env.example");
+  console.error("Missing GEMINI_API_KEY in environment. See .env");
   process.exit(1);
 }
 
 /**
- * Helper: transform quiz answers into a prompt for Gemini
- * Customize prompt as you like.
+ * Helper: turn quiz answers into a prompt for Gemini
  */
-function buildPromptFromAnswers(payload) {
-  const { answers = {}, meta = {} } = payload;
+function buildPromptFromAnswers({ answers = {}, meta = {} }) {
   const answerLines = Object.entries(answers)
     .map(([qid, idx]) => `Q${qid}: choice ${idx}`)
     .join("\n");
@@ -33,8 +32,7 @@ function buildPromptFromAnswers(payload) {
     .map(([k, v]) => `${k}: ${v}`)
     .join("\n");
 
-  return `
-You are "Financial Mentor", a friendly, concise coach for college students.
+  return `You are "Financial Mentor", a friendly, concise coach for college students.
 
 User quiz answers:
 ${answerLines}
@@ -46,66 +44,48 @@ Produce a JSON object ONLY with the following keys:
 {
   "summary": "one-line summary of the user's financial health",
   "top_actions": [
-    {"title":"...", "description":"...", "monthly_savings": 50},
-    ...
+    {"title":"...","description":"...","monthly_savings":50}
   ],
-  "two_step_lesson": ["step1", "step2"]
+  "two_step_lesson":["step1","step2"]
 }
 
-If you cannot compute monthly_savings use null. Return strict valid JSON with no extra commentary.
-`;
+Return valid JSON only. No extra commentary. If monthly_savings cannot be computed, use null.`;
 }
 
+/**
+ * AI endpoint
+ */
 app.post("/api/ai/mentor", async (req, res) => {
   try {
     const body = req.body || {};
-    // Build the prompt
-    const prompt = buildPromptFromAnswers(body);
+    const promptText = buildPromptFromAnswers(body);
 
-    // REST call to Generative Language API
-    const GEMINI_MODEL = process.env.GEMINI_MODEL || "text-bison-001";
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateText`;
 
-
     const payload = {
-    prompt: prompt,
-    temperature: 0.2,
-    candidateCount: 1,
-    maxOutputTokens: 500
+      prompt: { text: promptText },
+      temperature: 0.2,
+      candidateCount: 1,
+      maxOutputTokens: 500
     };
-
 
     const response = await axios.post(url, payload, {
       headers: {
         "Content-Type": "application/json",
-        "x-goog-api-key": GEMINI_API_KEY, // server-side only
+        "x-goog-api-key": GEMINI_API_KEY
       },
     });
 
-    // Response parsing depends on response shape. Commonly:
-    // data.candidates[0].content.parts[0].text (or data.candidates[0].output)
-    const data = response.data;
-    // Try common locations:
-    let text = "";
-    if (data?.candidates?.[0]?.content?.[0]?.parts?.[0]?.text) {
-      text = data.candidates[0].content[0].parts[0].text;
-    } else if (data?.candidates?.[0]?.output) {
-      text = data.candidates[0].output;
-    } else if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
-      text = data.candidates[0].content.parts[0].text;
-    } else if (data?.reply?.output_text) {
-      text = data.reply.output_text;
-    } else {
-      // fallback: stringify
-      text = JSON.stringify(data);
-    }
+    // parse response
+    const text =
+      response.data?.candidates?.[0]?.content?.[0]?.text ||
+      response.data?.candidates?.[0]?.output ||
+      JSON.stringify(response.data);
 
-    // Try to parse JSON out of the text (since we ask for JSON)
     let jsonOut = null;
     try {
       jsonOut = JSON.parse(text);
     } catch (e) {
-      // if the model didn't return pure JSON, return raw text too
       jsonOut = { raw: text };
     }
 
@@ -116,11 +96,16 @@ app.post("/api/ai/mentor", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Backend listening on http://localhost:${PORT}`);
-});
-
-app.get("/test", async (req, res) => {
+/**
+ * Simple test route
+ */
+app.get("/test", (req, res) => {
   res.json({ message: "Backend is running!" });
 });
 
+/**
+ * Start server
+ */
+app.listen(PORT, () => {
+  console.log(`Backend listening on http://localhost:${PORT}`);
+});
