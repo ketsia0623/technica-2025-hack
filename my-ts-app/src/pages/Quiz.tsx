@@ -115,7 +115,7 @@ export default function QuizPage(): JSX.Element {
         <div className="quiz-card" style={{ width: "100%", maxWidth: 760, background: "#fff", borderRadius: 12, boxShadow: "0 6px 20px rgba(20,20,30,0.06)", padding: 20 }}>
           <header style={{ marginBottom: 12 }}>
             <h1 className="quiz-title" style={{ margin: 0, fontSize: 20 }}>Financial Wellness Simulator — High School Student Edition</h1>
-            <p className="quiz-subtitle" style={{ marginTop: 6, color: "#6b7280", fontSize: 13 }}>Answer these to personalize your Financial Mentor & simulation.</p>
+            <p className="quiz-subtitle" style={{ marginTop: 6, color: "#6b7280", fontSize: 13, textAlign: "center"}}>Answer these to personalize your Financial Mentor & simulation.</p>
           </header>
 
           <div className="quiz-meta" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
