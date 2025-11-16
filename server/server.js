@@ -60,14 +60,19 @@ app.post("/api/ai/mentor", async (req, res) => {
     const body = req.body || {};
     const promptText = buildPromptFromAnswers(body);
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateText`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
     const payload = {
-      prompt: { text: promptText },
-      temperature: 0.2,
-      candidateCount: 1,
-      maxOutputTokens: 500
+    prompt: [
+        {
+        text: promptText
+        }
+    ],
+    temperature: 0.2,
+    candidateCount: 1,
+    maxOutputTokens: 500
     };
+
 
     const response = await axios.post(url, payload, {
       headers: {
