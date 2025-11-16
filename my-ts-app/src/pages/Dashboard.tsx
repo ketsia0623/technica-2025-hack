@@ -11,6 +11,7 @@ import {
   LineChart,
   Line
 } from "recharts";
+import { motion } from "framer-motion";
 import "./Dashboard.css";
 import Footer from "../components/footer";
 import Header from "../components/header";
@@ -35,13 +36,8 @@ export default function Dashboard() {
   const greenShades = ["#82ca9d", "#66bb6a", "#43a047", "#2e7d32", "#1b5e20"];
   const currentEntries = entriesByDate[selectedDate] || [];
 
-  const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+  const formatDate = (dateStr: string) =>
+    new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
   const addDays = (dateStr: string, days: number) => {
     const date = new Date(dateStr);
@@ -124,10 +120,54 @@ export default function Dashboard() {
     return totals;
   };
 
+  // ✅ Fake Nessie data import
+  const importFromNessie = async () => {
+    try {
+      const mapped: Entry[] = [
+        { action: "Coffee", amount: "3.5", date: selectedDate },
+        { action: "Groceries", amount: "45.2", date: selectedDate },
+        { action: "Uber", amount: "12.3", date: selectedDate },
+      ];
+
+      const newEntries = { ...entriesByDate };
+      mapped.forEach(entry => {
+        if (!newEntries[entry.date]) newEntries[entry.date] = [];
+        newEntries[entry.date].push(entry);
+      });
+
+      saveEntries(newEntries);
+      alert("Imported fake transactions!");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to import transactions");
+    }
+  };
+
+  const generateFakeMonth = () => {
+    const newEntries = { ...entriesByDate };
+    for (let i = 1; i <= 30; i++) {
+      const date = new Date();
+      date.setDate(i);
+      const dateStr = date.toISOString().split("T")[0];
+
+      newEntries[dateStr] = [
+        { action: "Coffee", amount: (Math.random()*5).toFixed(2), date: dateStr },
+        { action: "Lunch", amount: (Math.random()*15).toFixed(2), date: dateStr },
+      ];
+    }
+    saveEntries(newEntries);
+    alert("Generated fake month of transactions!");
+  };
+
+  const getProgressColor = (amount: number) => {
+    if (amount < 50) return "#2ecc71"; // green
+    if (amount < 150) return "#f1c40f"; // yellow
+    return "#e74c3c"; // red
+  };
+
   return (
     <div className="login-page">
       <Header />
-
       <div className="dashboard-container">
         <h2>
           Daily Spending Dashboard &nbsp;
@@ -137,6 +177,12 @@ export default function Dashboard() {
             onChange={e => setSelectedDate(e.target.value)}
             className="header-date-picker"
           />
+          <button className="import-btn" onClick={importFromNessie}>
+            Import Fake Bank Data
+          </button>
+          <button className="import-btn" onClick={generateFakeMonth}>
+            Generate Fake Month
+          </button>
         </h2>
 
         <div className="day-navigation">
@@ -174,7 +220,27 @@ export default function Dashboard() {
 
         <hr />
 
-        <h3>Total Spent on {formatDate(selectedDate)}: ${total.toFixed(2)}</h3>
+        <motion.h3
+          key={total}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          Total Spent on {formatDate(selectedDate)}: ${total.toFixed(2)}
+        </motion.h3>
+
+        <div className="progress-bar-wrapper">
+          <div
+            className="progress-bar"
+            style={{
+              width: `${Math.min((total / 200) * 100, 100)}%`,
+              background: getProgressColor(total),
+              height: "10px",
+              borderRadius: "5px",
+              transition: "width 0.5s ease"
+            }}
+          ></div>
+        </div>
 
         <div className="charts-wrapper">
           <div className="bar-chart-container">
@@ -183,15 +249,12 @@ export default function Dashboard() {
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" stroke="#145214" label={{ value: 'Transaction', position: 'insideBottom', offset: -5 }} />
-                  <YAxis stroke="#145214" label={{ value: 'Amount ($)', angle: -90, position: 'insideLeft', offset: 10 }} />
+                  <XAxis dataKey="name" stroke="#145214" />
+                  <YAxis stroke="#145214" />
                   <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
-                  <Bar dataKey="amount">
+                  <Bar dataKey="amount" isAnimationActive={true}>
                     {chartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={greenShades[index % greenShades.length]}
-                      />
+                      <Cell key={`cell-${index}`} fill={greenShades[index % greenShades.length]} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -206,10 +269,10 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={getMonthlyData()} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" stroke="#145214" label={{ value: 'Day of the Month', position: 'insideBottom', offset: -5 }} />
-                <YAxis stroke="#145214" label={{ value: 'Total ($)', angle: -90, position: 'insideLeft', offset: 10 }} />
+                <XAxis dataKey="date" stroke="#145214" />
+                <YAxis stroke="#145214" />
                 <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
-                <Line type="monotone" dataKey="total" stroke="#82ca9d" strokeWidth={3} />
+                <Line type="monotone" dataKey="total" stroke="#82ca9d" strokeWidth={3} isAnimationActive={true} />
               </LineChart>
             </ResponsiveContainer>
           </div>
