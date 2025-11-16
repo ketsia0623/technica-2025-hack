@@ -10,6 +10,9 @@ import ChatBubble from "./components/ChatBubble";
 
 import './App.css';
 import ProtectedRoute from './components/ProtectedRoute';
+import QuizPage1 from './pages/Quiz-hs-student';
+import QuizPage2 from './pages/Quiz-college';
+import QuizPage3 from './pages/Quiz-new-grad';  
 
 function App() {
   return (
@@ -38,6 +41,30 @@ function App() {
           element={
             <ProtectedRoute>
               <Quiz />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/quiz1" 
+          element={
+            <ProtectedRoute>
+              <QuizPage1 />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/quiz2" 
+          element={
+            <ProtectedRoute>
+              <QuizPage2 />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/quiz3" 
+          element={
+            <ProtectedRoute>
+              <QuizPage3 />
             </ProtectedRoute>
           } 
         />

@@ -68,7 +68,7 @@ const questions: Question[] = [
 ];
 
 
-export default function QuizPage(): JSX.Element {
+export default function QuizPage3(): JSX.Element {
   const [answers, setAnswers] = useState<Record<number, number | null>>(
     () =>
       questions.reduce((acc, q) => {

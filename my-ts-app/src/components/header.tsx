@@ -58,12 +58,6 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn: isLoggedInProp, onLogout })
                 Dashboard
               </button>
               <button
-                className={`nav-link ${location.pathname === '/quiz' ? 'active' : ''}`}
-                onClick={() => navigate('/quiz')}
-              >
-                Quiz
-              </button>
-              <button
                 className={`nav-link ${location.pathname === '/sim' ? 'active' : ''}`}
                 onClick={() => navigate('/sim')}
               >
