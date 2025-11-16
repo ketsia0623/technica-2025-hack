@@ -177,12 +177,16 @@ export default function Dashboard() {
             onChange={e => setSelectedDate(e.target.value)}
             className="header-date-picker"
           />
+     
+          <div className="dashboard-buttons">
           <button className="import-btn" onClick={importFromNessie}>
-            Import Fake Bank Data
+            Import Nessie Bank Data
           </button>
           <button className="import-btn" onClick={generateFakeMonth}>
             Generate Fake Month
           </button>
+          </div>
+
         </h2>
 
         <div className="day-navigation">
