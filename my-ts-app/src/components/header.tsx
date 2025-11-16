@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './header.css';
+import Logo from "../imagess/technica-logo.png";   
 
 interface HeaderProps {
   isLoggedIn?: boolean;
@@ -11,18 +12,15 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn: isLoggedInProp, onLogout })
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Check login status from localStorage
   const [isLoggedIn, setIsLoggedIn] = useState(
     isLoggedInProp ?? localStorage.getItem('isLoggedIn') === 'true'
   );
 
   useEffect(() => {
-    // Update login status when it changes
     const checkLoginStatus = () => {
       setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
     };
-    
-    // Check on mount and when location changes
+
     checkLoginStatus();
     window.addEventListener('storage', checkLoginStatus);
     
@@ -43,9 +41,10 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn: isLoggedInProp, onLogout })
   return (
     <header className="header">
       <div className="header-container">
+
+        {/*  Updated Logo Section */}
         <div className="header-logo" onClick={() => navigate('/')}>
-          <span className="logo-icon">🤫</span>
-          <span className="logo-text">Finance Unlocked</span>
+          <img src={Logo} alt="Finance Unlocked Logo" className="header-logo-img" />
         </div>
 
         <nav className="header-nav">
