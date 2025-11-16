@@ -46,7 +46,7 @@ const Footer: React.FC = () => {
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {currentYear} FinLit Hub. All rights reserved.</p>
+        <p>&copy; {currentYear} MASK-S. All rights reserved.</p>
       </div>
     </footer>
   );
