@@ -7,7 +7,9 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Cell
+  Cell,
+  LineChart,
+  Line
 } from "recharts";
 import "./Dashboard.css";
 import Footer from "../components/footer";
@@ -20,7 +22,12 @@ interface Entry {
 }
 
 export default function Dashboard() {
-  const [entriesByDate, setEntriesByDate] = React.useState<Record<string, Entry[]>>({});
+  // Load saved entries from localStorage
+  const [entriesByDate, setEntriesByDate] = React.useState<Record<string, Entry[]>>(() => {
+    const saved = localStorage.getItem("entriesByDate");
+    return saved ? JSON.parse(saved) : {};
+  });
+
   const [selectedDate, setSelectedDate] = React.useState(
     new Date().toISOString().split("T")[0]
   );
@@ -28,9 +35,9 @@ export default function Dashboard() {
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
   const greenShades = ["#82ca9d", "#66bb6a", "#43a047", "#2e7d32", "#1b5e20"];
-
   const currentEntries = entriesByDate[selectedDate] || [];
 
+  // Helper to add/subtract days
   const addDays = (dateStr: string, days: number) => {
     const date = new Date(dateStr);
     date.setDate(date.getDate() + days);
@@ -40,23 +47,29 @@ export default function Dashboard() {
   const handleNextDay = () => setSelectedDate(prev => addDays(prev, 1));
   const handlePrevDay = () => setSelectedDate(prev => addDays(prev, -1));
 
+  // Save entries to state and localStorage
+  const saveEntries = (newEntries: Record<string, Entry[]>) => {
+    setEntriesByDate(newEntries);
+    localStorage.setItem("entriesByDate", JSON.stringify(newEntries));
+  };
+
   const handleChangeAction = (index: number, value: string) => {
     const copy = [...currentEntries];
     copy[index].action = value;
-    setEntriesByDate({ ...entriesByDate, [selectedDate]: copy });
+    saveEntries({ ...entriesByDate, [selectedDate]: copy });
   };
 
   const handleChangeAmount = (index: number, value: string) => {
     if (value === "" || /^\d*\.?\d*$/.test(value)) {
       const copy = [...currentEntries];
       copy[index].amount = value;
-      setEntriesByDate({ ...entriesByDate, [selectedDate]: copy });
+      saveEntries({ ...entriesByDate, [selectedDate]: copy });
     }
   };
 
   const handleAddEntry = () => {
     const copy = [...currentEntries, { action: "", amount: "", date: selectedDate }];
-    setEntriesByDate({ ...entriesByDate, [selectedDate]: copy });
+    saveEntries({ ...entriesByDate, [selectedDate]: copy });
     setTimeout(() => {
       const lastIndex = copy.length - 1;
       inputRefs.current[lastIndex]?.focus();
@@ -65,7 +78,7 @@ export default function Dashboard() {
 
   const handleRemoveEntry = (index: number) => {
     const copy = currentEntries.filter((_, i) => i !== index);
-    setEntriesByDate({ ...entriesByDate, [selectedDate]: copy });
+    saveEntries({ ...entriesByDate, [selectedDate]: copy });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
@@ -77,6 +90,7 @@ export default function Dashboard() {
     }
   };
 
+  // Daily bar chart data
   const chartData = currentEntries
     .filter(e => e.action.trim() !== "" || e.amount.trim() !== "")
     .map((e, index) => ({
@@ -88,6 +102,25 @@ export default function Dashboard() {
     (sum, e) => sum + parseFloat(e.amount || "0"),
     0
   );
+
+  // Monthly line chart data
+  const getMonthlyData = () => {
+    const totals: { date: string; total: number }[] = [];
+    const today = new Date(selectedDate);
+    const year = today.getFullYear();
+    const month = today.getMonth(); // 0-indexed
+
+    for (let day = 1; day <= 31; day++) {
+      const date = new Date(year, month, day);
+      if (date.getMonth() !== month) break; // stop at end of month
+      const dateStr = date.toISOString().split("T")[0];
+      const dailyEntries = entriesByDate[dateStr] || [];
+      const dailyTotal = dailyEntries.reduce((sum, e) => sum + parseFloat(e.amount || "0"), 0);
+      totals.push({ date: day.toString(), total: dailyTotal });
+    }
+
+    return totals;
+  };
 
   return (
     <div className="login-page">
@@ -143,36 +176,45 @@ export default function Dashboard() {
 
         <h3>Total Spent on {selectedDate}: ${total.toFixed(2)}</h3>
 
-        <h3>Transactions Bar Chart</h3>
-        {chartData.length > 0 ? (
+        {/* Charts side by side */}
+        <div className="charts-wrapper">
           <div className="bar-chart-container">
+            <h3>Daily Transactions</h3>
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" stroke="#145214" />
+                  <YAxis stroke="#145214" />
+                  <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
+                  <Bar dataKey="amount">
+                    {chartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={greenShades[index % greenShades.length]}
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="no-transactions">No transactions for this day</p>
+            )}
+          </div>
+
+          <div className="line-chart-container">
+            <h3>Monthly Spending Overview</h3>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
+              <LineChart data={getMonthlyData()} margin={{ top: 20, right: 30, left: 0, bottom: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-
-                {/* ← UPDATED: horizontal labels */}
-                <XAxis 
-                  dataKey="name" 
-                  stroke="#145214"
-                />
-
+                <XAxis dataKey="date" stroke="#145214" />
                 <YAxis stroke="#145214" />
                 <Tooltip formatter={(value: number) => `$${value.toFixed(2)}`} />
-
-                <Bar dataKey="amount">
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={greenShades[index % greenShades.length]}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
+                <Line type="monotone" dataKey="total" stroke="#82ca9d" strokeWidth={3} />
+              </LineChart>
             </ResponsiveContainer>
           </div>
-        ) : (
-          <p className="no-transactions">No transactions for this day</p>
-        )}
+        </div>
       </div>
 
       <Footer />
