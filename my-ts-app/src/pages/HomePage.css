@@ -18,6 +18,23 @@
   padding: 2rem;
 }
 
+
+/* logo */
+.logo-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: -90px;
+  margin-bottom: -100px;
+}
+
+.logo-container img {
+  width: 400px;       /* change this to any size you want */
+  height: auto;       /* keeps aspect ratio */
+  object-fit: contain;
+  background-color: #43a047
+}
+
 /* ================================
    Instructions Box
    ================================ */
