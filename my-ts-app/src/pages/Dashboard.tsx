@@ -37,6 +37,15 @@ export default function Dashboard() {
   const greenShades = ["#82ca9d", "#66bb6a", "#43a047", "#2e7d32", "#1b5e20"];
   const currentEntries = entriesByDate[selectedDate] || [];
 
+  // Helper to format dates like "Nov 15, 2025"
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+  };
+
   // Helper to add/subtract days
   const addDays = (dateStr: string, days: number) => {
     const date = new Date(dateStr);
@@ -139,7 +148,7 @@ export default function Dashboard() {
 
         <div className="day-navigation">
           <button onClick={handlePrevDay}>Prev</button>
-          <span>{selectedDate}</span>
+          <span>{formatDate(selectedDate)}</span>
           <button onClick={handleNextDay}>Next</button>
         </div>
 
@@ -151,9 +160,7 @@ export default function Dashboard() {
               value={entry.action}
               onChange={e => handleChangeAction(index, e.target.value)}
               onKeyDown={e => handleKeyDown(e, index)}
-              ref={el => {
-                inputRefs.current[index] = el;
-              }}
+              ref={el => { inputRefs.current[index] = el; }}
               className="entry-action"
             />
             <input
@@ -174,7 +181,7 @@ export default function Dashboard() {
 
         <hr />
 
-        <h3>Total Spent on {selectedDate}: ${total.toFixed(2)}</h3>
+        <h3>Total Spent on {formatDate(selectedDate)}: ${total.toFixed(2)}</h3>
 
         {/* Charts side by side */}
         <div className="charts-wrapper">
