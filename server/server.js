@@ -60,29 +60,39 @@ app.post("/api/ai/mentor", async (req, res) => {
     const body = req.body || {};
     const promptText = buildPromptFromAnswers(body);
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+    //const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
     const payload = {
-    prompt: [
-        {
-        text: promptText
+        contents: [
+            {
+            parts: [
+                {
+                text: promptText
+                }
+            ]
+            }
+        ],
+        generationConfig: {
+            temperature: 0.2,
+            topP: 0.95,
+            topK: 64,
+            candidateCount: 1,
+            maxOutputTokens: 800
         }
-    ],
-    temperature: 0.2,
-    candidateCount: 1,
-    maxOutputTokens: 500
     };
 
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
     const response = await axios.post(url, payload, {
-      headers: {
+    headers: {
         "Content-Type": "application/json",
         "x-goog-api-key": GEMINI_API_KEY
-      },
+    },
     });
 
-    // parse response
-    const text = response.data?.candidates?.[0]?.content?.[0]?.text || JSON.stringify(response.data);
+
+    const text = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || JSON.stringify(response.data);
+
 
 
     let jsonOut = null;
