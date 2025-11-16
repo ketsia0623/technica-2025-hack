@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './header.css';
 
@@ -7,11 +7,33 @@ interface HeaderProps {
   onLogout?: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ isLoggedIn = false, onLogout }) => {
+const Header: React.FC<HeaderProps> = ({ isLoggedIn: isLoggedInProp, onLogout }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  
+  // Check login status from localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    isLoggedInProp ?? localStorage.getItem('isLoggedIn') === 'true'
+  );
+
+  useEffect(() => {
+    // Update login status when it changes
+    const checkLoginStatus = () => {
+      setIsLoggedIn(localStorage.getItem('isLoggedIn') === 'true');
+    };
+    
+    // Check on mount and when location changes
+    checkLoginStatus();
+    window.addEventListener('storage', checkLoginStatus);
+    
+    return () => window.removeEventListener('storage', checkLoginStatus);
+  }, [location]);
 
   const handleLogout = () => {
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userEmail');
+    setIsLoggedIn(false);
+    
     if (onLogout) {
       onLogout();
     }
@@ -24,18 +46,6 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn = false, onLogout }) => {
         <div className="header-logo" onClick={() => navigate('/')}>
           <span className="logo-icon">🤫</span>
           <span className="logo-text">Finance Unlocked</span>
-        </div>
-        <div className="header-logo" onClick={() => navigate('/homepage')}>
-            <span className="home-link">Home</span>
-        </div>
-        <div className="header-logo" onClick={() => navigate('/dashboard')}>
-            <span className="dashboard-link">Dashboard</span>
-        </div>
-        <div className="header-logo" onClick={() => navigate('/quiz')}>
-            <span className="quiz-link">Quiz</span>
-        </div>
-        <div className="header-logo" onClick={() => navigate('/sim')}>
-            <span className="quiz-link">Simulation</span>
         </div>
 
         <nav className="header-nav">
@@ -52,6 +62,12 @@ const Header: React.FC<HeaderProps> = ({ isLoggedIn = false, onLogout }) => {
                 onClick={() => navigate('/quiz')}
               >
                 Quiz
+              </button>
+              <button
+                className={`nav-link ${location.pathname === '/sim' ? 'active' : ''}`}
+                onClick={() => navigate('/sim')}
+              >
+                Simulation
               </button>
               <button className="logout-button" onClick={handleLogout}>
                 Logout
