@@ -4,19 +4,17 @@ import "./Quiz.css"; // make sure Quiz.css is in the same folder
 import Header from "../components/header";
 import Footer from "../components/footer";
 
-
 type Question = {
   id: number;
   question: string;
   options: string[];
 };
 
-
 const questions: Question[] = [
   {
     id: 1,
     question: "Where do you want to live this semester?",
-    options: [ 
+    options: [
       "Apt A — $650/mo, 40-min commute",
       "Apt B — $900/mo, 20-min commute",
       "Apt C — $1,300/mo, 5-min commute + amenities",
@@ -53,6 +51,9 @@ export default function QuizPage(): JSX.Element {
   );
 
   const [showSummary, setShowSummary] = useState(false);
+  const [aiResult, setAiResult] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSelect = (questionId: number, optionIndex: number) => {
     setAnswers((prev) => ({ ...prev, [questionId]: optionIndex }));
@@ -60,9 +61,58 @@ export default function QuizPage(): JSX.Element {
 
   const allAnswered = Object.values(answers).every((v) => v !== null);
 
-  const handleSubmit = () => {
-    setShowSummary(true);
-    // Hook: send 'answers' to AI Mentor or scoring function here
+  // ---------------------------
+  // AI Mentor call function
+  // ---------------------------
+  async function sendToMentor(
+    answersPayload: Record<number, number | null>,
+    meta: Record<string, any> = {}
+  ) {
+    try {
+      const body = { answers: answersPayload, meta };
+      const resp = await fetch("http://localhost:5000/api/ai/mentor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (!resp.ok) {
+        const txt = await resp.text();
+        throw new Error(`Server error: ${resp.status} ${txt}`);
+      }
+
+      const data = await resp.json();
+      if (!data.ok) throw new Error(data.error || "AI endpoint returned an error");
+
+      return data.result;
+    } catch (err: any) {
+      console.error("sendToMentor error", err);
+      throw err;
+    }
+  }
+
+  // ---------------------------
+  // Submit handler
+  // ---------------------------
+  const handleSubmit = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      setShowSummary(true);
+
+      // send answers + optional metadata to backend
+      const result = await sendToMentor(answers, { userAgent: navigator.userAgent });
+      setAiResult(result);
+    } catch (err: any) {
+      setError(err.message || "Unknown error");
+      setAiResult(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendFromSummary = async () => {
+    await handleSubmit(); // re-generate AI result
   };
 
   const handleReset = () => {
@@ -73,126 +123,191 @@ export default function QuizPage(): JSX.Element {
       }, {} as Record<number, number | null>)
     );
     setShowSummary(false);
+    setAiResult(null);
+    setError(null);
   };
 
+  // ---------------------------
+  // JSX
+  // ---------------------------
   return (
     <div className="quiz-page">
-        <Header />
-    <div className="quiz-container">
-      <div className="quiz-card">
-        <header>
-          <h1 className="quiz-title">Financial Familiar — Quick Quiz</h1>
-          <p className="quiz-subtitle">Answer these to personalize your Financial Mentor & simulation.</p>
-        </header>
+      <Header />
+      <div className="quiz-container">
+        <div className="quiz-card">
+          <header>
+            <h1 className="quiz-title">Financial Familiar — Quick Quiz</h1>
+            <p className="quiz-subtitle">
+              Answer these to personalize your Financial Mentor & simulation.
+            </p>
+          </header>
 
-        <div className="quiz-meta">
-          <div className="quiz-stats">
-            Questions: {questions.length} • Answered:{" "}
-            {Object.values(answers).filter((v) => v !== null).length}
-          </div>
-          <div className="quiz-tip">Tip: Your choices will feed the AI Mentor</div>
-        </div>
-
-        {/* Questions area - will scroll if many */}
-        <div className="quiz-questions-wrapper">
-          {questions.map((q) => (
-            <div key={q.id} className="quiz-question-box">
-              <div className="quiz-question-header">
-                <h3 className="quiz-question">{q.question}</h3>
-                <div className="quiz-qid">#{q.id}</div>
-              </div>
-
-              <div className="quiz-options">
-                {q.options.map((opt, i) => {
-                  const selected = answers[q.id] === i;
-                  return (
-                    <label
-                      key={i}
-                      className={`quiz-option ${selected ? "selected" : ""}`}
-                      // clicking label toggles selection
-                      onClick={() => handleSelect(q.id, i)}
-                    >
-                      <input
-                        type="radio"
-                        name={`question-${q.id}`}
-                        checked={selected || false}
-                        readOnly
-                        className="quiz-option-input"
-                      />
-                      <span className="quiz-option-text">{opt}</span>
-                    </label>
-                  );
-                })}
-              </div>
+          <div className="quiz-meta">
+            <div className="quiz-stats">
+              Questions: {questions.length} • Answered:{" "}
+              {Object.values(answers).filter((v) => v !== null).length}
             </div>
-          ))}
-        </div>
-
-        {/* Footer actions */}
-        <div className="quiz-footer">
-          <div className="quiz-status">
-            {allAnswered ? (
-              <span className="quiz-all-done">All questions answered</span>
-            ) : (
-              <span className="quiz-partial">Some questions left — I’ll still accept partial answers</span>
-            )}
+            <div className="quiz-tip">Tip: Your choices will feed the AI Mentor</div>
           </div>
 
-          <div className="quiz-actions">
-            <button className="quiz-reset" onClick={handleReset}>
-              Reset
-            </button>
+          {/* Questions area */}
+          <div className="quiz-questions-wrapper">
+            {questions.map((q) => (
+              <div key={q.id} className="quiz-question-box">
+                <div className="quiz-question-header">
+                  <h3 className="quiz-question">{q.question}</h3>
+                  <div className="quiz-qid">#{q.id}</div>
+                </div>
 
-            <button
-              className={`quiz-button ${allAnswered ? "" : "quiz-button-partial"}`}
-              onClick={handleSubmit}
-            >
-              {allAnswered ? "Submit & Generate Plan" : "Submit (Partial)"}
-            </button>
+                <div className="quiz-options">
+                  {q.options.map((opt, i) => {
+                    const selected = answers[q.id] === i;
+                    return (
+                      <label
+                        key={i}
+                        className={`quiz-option ${selected ? "selected" : ""}`}
+                        onClick={() => handleSelect(q.id, i)}
+                      >
+                        <input
+                          type="radio"
+                          name={`question-${q.id}`}
+                          checked={selected || false}
+                          readOnly
+                          className="quiz-option-input"
+                        />
+                        <span className="quiz-option-text">{opt}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
 
-        {/* Summary panel */}
-        {showSummary && (
-          <div className="quiz-summary">
-            <h4 className="quiz-summary-title">Summary of your answers</h4>
-            <ul className="quiz-summary-list">
-              {questions.map((q) => {
-                const selIndex = answers[q.id];
-                return (
-                  <li key={q.id} className="quiz-summary-item">
-                    <div className="quiz-summary-id">#{q.id}</div>
-                    <div>
-                      <div className="quiz-summary-question">{q.question}</div>
-                      <div className="quiz-summary-answer">
-                        {selIndex !== null ? (
-                          q.options[selIndex]
-                        ) : (
-                          <i className="quiz-no-answer">No answer</i>
-                        )}
-                      </div>
-                    </div>
-                  </li>
-                );
-              })}
-            </ul>
+          {/* Footer */}
+          <div className="quiz-footer">
+            <div className="quiz-status">
+              {allAnswered ? (
+                <span className="quiz-all-done">All questions answered</span>
+              ) : (
+                <span className="quiz-partial">
+                  Some questions left — I’ll still accept partial answers
+                </span>
+              )}
+            </div>
 
-            <div className="quiz-summary-actions">
+            <div className="quiz-actions">
               <button
-                className="quiz-send-mentor"
-                onClick={() => {
-                  // replace with actual API/LLM call
-                  alert("Send answers to AI Mentor (hook point)");
-                }}
+                className="quiz-reset"
+                onClick={handleReset}
+                disabled={loading}
+                aria-disabled={loading}
               >
-                Send to AI Mentor
+                Reset
+              </button>
+
+              <button
+                className={`quiz-button ${allAnswered ? "" : "quiz-button-partial"}`}
+                onClick={handleSubmit}
+                disabled={loading}
+                aria-disabled={loading}
+              >
+                {loading ? "Generating..." : allAnswered ? "Submit & Generate Plan" : "Submit (Partial)"}
               </button>
             </div>
           </div>
-        )}
+
+          {/* Summary panel */}
+          {showSummary && (
+            <div className="quiz-summary">
+              <h4 className="quiz-summary-title">Summary of your answers</h4>
+              <ul className="quiz-summary-list">
+                {questions.map((q) => {
+                  const selIndex = answers[q.id];
+                  return (
+                    <li key={q.id} className="quiz-summary-item">
+                      <div className="quiz-summary-id">#{q.id}</div>
+                      <div>
+                        <div className="quiz-summary-question">{q.question}</div>
+                        <div className="quiz-summary-answer">
+                          {selIndex !== null ? (
+                            q.options[selIndex]
+                          ) : (
+                            <i className="quiz-no-answer">No answer</i>
+                          )}
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+
+              <div className="quiz-summary-actions">
+                <button
+                  className="quiz-send-mentor"
+                  onClick={handleSendFromSummary}
+                  disabled={loading}
+                >
+                  {loading ? "Generating…" : aiResult ? "Regenerate Plan" : "Send to AI Mentor"}
+                </button>
+              </div>
+
+              {/* Loading / Error / AI result */}
+              <div style={{ marginTop: 16 }}>
+                {loading && <div className="quiz-ai-loading">Generating plan…</div>}
+
+                {error && (
+                  <div className="quiz-ai-error" style={{ color: "crimson", marginTop: 8 }}>
+                    <strong>Error:</strong> {error}
+                  </div>
+                )}
+
+                {aiResult && (
+                  <div className="quiz-ai-result" style={{ marginTop: 12 }}>
+                    {aiResult.summary && (
+                      <div style={{ marginBottom: 8 }}>
+                        <strong>Summary:</strong> {aiResult.summary}
+                      </div>
+                    )}
+
+                    {Array.isArray(aiResult.top_actions) && (
+                      <div style={{ marginBottom: 8 }}>
+                        <strong>Top actions:</strong>
+                        <ul>
+                          {aiResult.top_actions.map((a: any, idx: number) => (
+                            <li key={idx}>
+                              <strong>{a.title}</strong>: {a.description}
+                              {typeof a.monthly_savings === "number" && <> — save ${a.monthly_savings}/mo</>}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+
+                    {Array.isArray(aiResult.two_step_lesson) && (
+                      <div style={{ marginBottom: 8 }}>
+                        <strong>Two-step lesson:</strong>
+                        <ol>
+                          {aiResult.two_step_lesson.map((s: string, i: number) => (
+                            <li key={i}>{s}</li>
+                          ))}
+                        </ol>
+                      </div>
+                    )}
+
+                    {!aiResult.summary &&
+                      !aiResult.top_actions &&
+                      !aiResult.two_step_lesson && (
+                        <pre style={{ whiteSpace: "pre-wrap" }}>{JSON.stringify(aiResult, null, 2)}</pre>
+                      )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-    <Footer />
+      <Footer />
     </div>
   );
 }
