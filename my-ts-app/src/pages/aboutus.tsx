@@ -17,40 +17,41 @@ const AboutPage: React.FC = () => {
         <div className="about-grid">
           {/* Profile 1 */}
           <div className="about-card">
-            <h2 className="profile-name">Ava Thompson</h2>
-            <p className="profile-role">Lead Financial Educator</p>
+            <h2 className="profile-name">Ketsia Lumiere Donfack Ouwe</h2>
+            <p className="profile-role">Backend Engineer</p>
             <p className="profile-bio">
-              Ava specializes in simplifying personal finance for beginners. 
-              She designs learning paths and quizzes used across the platform.
+              Ketsia is so cool she made the backend systems that keep user data secure 
+              and the app running smoothly.
             </p>
           </div>
 
           {/* Profile 2 */}
           <div className="about-card">
-            <h2 className="profile-name">Jordan Reyes</h2>
-            <p className="profile-role">Front-End Developer</p>
+            <h2 className="profile-name">Samita Bomasamudram</h2>
+            <p className="profile-role">Full-stack Developer</p>
             <p className="profile-bio">
-              Jordan focuses on UI/UX, ensuring every experience feels clean, accessible, 
-              and empowering — from dashboards to interactive tools.
+              Samita builds both the client-side and server-side of the app, 
+              ensuring a seamless user experience. 
             </p>
           </div>
 
           {/* Profile 3 */}
           <div className="about-card">
-            <h2 className="profile-name">Mya Patel</h2>
-            <p className="profile-role">Data & Insights Lead</p>
+            <h2 className="profile-name">Angel Jose</h2>
+            <p className="profile-role">Front-End Developer</p>
             <p className="profile-bio">
-              Mya builds the logic behind quizzes, scoring, and personalized financial insights.
+              Angel designs and implements the user interface, making sure the app is 
+              intuitive and visually appealing.
             </p>
           </div>
 
           {/* Profile 4 */}
           <div className="about-card">
-            <h2 className="profile-name">Ethan Kim</h2>
-            <p className="profile-role">Backend Engineer</p>
+            <h2 className="profile-name">Meera Nambiar</h2>
+            <p className="profile-role">Full-Stack Developer/Artist</p>
             <p className="profile-bio">
-              Ethan maintains secure API systems, user authentication, and database tools 
-              powering the app.
+              Meera works on both the front-end and back-end, ensuring the app is functional 
+              and user-friendly. She also creates the app's artwork and graphics.
             </p>
           </div>
         </div>
