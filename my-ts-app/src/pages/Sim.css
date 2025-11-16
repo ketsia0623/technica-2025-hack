@@ -1,17 +1,20 @@
-.sim-page {
-  text-align: center;
-  padding-top: 50px;
-}
-
-.sim-container {
+.images-row {
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: 40px; /* space between images */
+  align-items: flex-start;
+  margin-top: 30px;
+}
+
+.image-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .sim-image {
-  width: 250px;
+  width: 340px;   /* all images same size for alignment */
   cursor: pointer;
   transition: transform 0.2s;
 }
@@ -19,3 +22,15 @@
 .sim-image:hover {
   transform: scale(1.05);
 }
+
+.sim-image.pumpkin {
+  width: 270px;   /* slightly bigger if desired */
+  margin-bottom: 60px; /* gap between pumpkin and captions */
+}
+
+.image-caption {
+  margin: 2px 0; /* small gap between lines */
+}
+
+
+
