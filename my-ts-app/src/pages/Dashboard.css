@@ -45,9 +45,9 @@
 /* Entry rows */
 .entry-row {
   display: flex;
-  justify-content: center; /* centers items horizontally */
-  align-items: center;    /* centers items vertically */
-  gap: 10px;              /* space between inputs and button */
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
 }
 
@@ -75,18 +75,24 @@
 /* Darker first input */
 .entry-row:first-child input[type="text"],
 .entry-row:first-child input[type="date"] {
-  border-color: #145214; /* dark green border */
-  background-color: #e6f3ea; /* slightly darker green background */
+  border-color: #145214;
+  background-color: #e6f3ea;
 }
 
-/* Remove button (keep your original style) */
+/* Remove button */
 .entry-row button {
   padding: 6px 10px;
   cursor: pointer;
   background-color: #43c075;
   border-radius: 4px;
+  border: none;
+  color: white;
   font-weight: bold;
   transition: background-color 0.2s ease;
+}
+
+.entry-row button:hover {
+  background-color: #62d48b;
 }
 
 /* Add Entry Button */
@@ -127,8 +133,21 @@
   color: #888;
 }
 
+/* Date picker */
 .header-date-picker {
   padding: 5px 8px;
   font-size: 16px;
   margin-left: 10px;
+}
+
+/* ================================
+   X-Axis Label Wrapping Fix
+   ================================ */
+
+.recharts-cartesian-axis-tick-value {
+  white-space: normal !important;
+  max-width: 70px;      /* keeps labels readable */
+  text-align: center;
+  overflow-wrap: break-word;
+  line-height: 1.1;
 }
