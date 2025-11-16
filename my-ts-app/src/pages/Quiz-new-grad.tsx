@@ -13,24 +13,60 @@ type Question = {
 const questions: Question[] = [
   {
     id: 1,
-    question: "Where do you want to live this semester?",
+    question:
+      "You just got your first salary offer. What’s the next step before accepting?",
     options: [
-      "Apt A — $650/mo, 40-min commute",
-      "Apt B — $900/mo, 20-min commute",
-      "Apt C — $1,300/mo, 5-min commute + amenities",
+      "Compare salary to cost of living & check benefits",
+      "Accept immediately",
+      "Ask TikTok to decide",
+      "Ignore the benefits package",
     ],
   },
   {
     id: 2,
-    question: "How will you get around?",
-    options: ["Bus Pass — $40/mo", "Used Car — $300/mo + gas", "Rideshare — $120/week"],
+    question:
+      "You’re choosing where to live. One apartment is cheaper but far; the other is expensive but walkable. What’s the right financial consideration?",
+    options: [
+      "Compare total monthly costs including transportation",
+      "Pick the one with cuter floors",
+      "Choose whichever your friend likes",
+      "Pick the expensive one because it “feels adult”",
+    ],
   },
   {
     id: 3,
-    question: "It’s Friday night — what’s the move?",
-    options: ["Cook at home — $12", "One night out — $45", "Full night out — $95"],
+    question: "Your employer offers a 401(k) match. What should you do?",
+    options: [
+      "Contribute at least enough to get the full match",
+      "Ignore it, retirement is far away",
+      "Wait 5 years",
+      "Cash out early",
+    ],
+  },
+  {
+    id: 4,
+    question:
+      "Your car breaks down and repairs cost $850. What’s the smartest way to handle this unexpected expense?",
+    options: [
+      "Use your emergency fund",
+      "Put it on a high-interest credit card",
+      "Take out a personal loan",
+      "Ignore the issue",
+    ],
+  },
+  {
+    id: 5,
+    question:
+      "You have student loans entering repayment. What’s the best first step?",
+    options: [
+      "Identify your loan types + choose a repayment plan",
+      "Pretend they don’t exist",
+      "Only pay when late notices come",
+      "Immediately refinance with no research",
+    ],
   },
 ];
+
 
 export default function QuizPage(): JSX.Element {
   const [answers, setAnswers] = useState<Record<number, number | null>>(
@@ -114,7 +150,7 @@ export default function QuizPage(): JSX.Element {
         {/* White box that you liked */}
         <div className="quiz-card" style={{ width: "100%", maxWidth: 760, background: "#fff", borderRadius: 12, boxShadow: "0 6px 20px rgba(20,20,30,0.06)", padding: 20 }}>
           <header style={{ marginBottom: 12 }}>
-            <h1 className="quiz-title" style={{ margin: 0, fontSize: 20 }}>Financial Wellness Simulator — High School Student Edition</h1>
+            <h1 className="quiz-title" style={{ margin: 0, fontSize: 20 }}>Financial Wellness Simulator — New Grad Edition</h1>
             <p className="quiz-subtitle" style={{ marginTop: 6, color: "#6b7280", fontSize: 13, textAlign: "center"}}>Answer these to personalize your Financial Mentor & simulation.</p>
           </header>
 

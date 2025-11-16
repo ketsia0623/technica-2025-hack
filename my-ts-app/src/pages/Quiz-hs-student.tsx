@@ -13,24 +13,56 @@ type Question = {
 const questions: Question[] = [
   {
     id: 1,
-    question: "Where do you want to live this semester?",
+    question: "You just got your first part-time job earning $300/week. What’s the first thing you should do with your paycheck?",
     options: [
-      "Apt A — $650/mo, 40-min commute",
-      "Apt B — $900/mo, 20-min commute",
-      "Apt C — $1,300/mo, 5-min commute + amenities",
+      "Spend it immediately",
+      "Save a portion and budget the rest",
+      "Give it all to friends/family",
+      "Keep it as cash with no plan",
     ],
   },
   {
     id: 2,
-    question: "How will you get around?",
-    options: ["Bus Pass — $40/mo", "Used Car — $300/mo + gas", "Rideshare — $120/week"],
+    question: "You want to buy a $600 phone, but you only have $150 saved. What’s the best way to reach your goal?",
+    options: [
+      "Put it on a credit card",
+      "Save a part of each paycheck until you reach $600",
+      "Borrow money from multiple friends",
+      "Sign up for a payment plan without reading details",
+    ],
   },
   {
     id: 3,
-    question: "It’s Friday night — what’s the move?",
-    options: ["Cook at home — $12", "One night out — $45", "Full night out — $95"],
+    question: "Your parents ask if you want to open a bank account. What’s the main benefit of opening one this year?",
+    options: [
+      "Safer savings + learning to manage money",
+      "Free candy at the bank",
+      "No benefit",
+      "You get more social media followers",
+    ],
+  },
+  {
+    id: 4,
+    question: "You’re offered a store credit card with “10% off today.” What’s the smartest response?",
+    options: [
+      "Sign up immediately",
+      "Ask about interest rates, fees, and if you really need it",
+      "Sign up because your friends have one",
+      "Give your personal info without checking",
+    ],
+  },
+  {
+    id: 5,
+    question: "You want to save $1,000 by the end of the year. Which strategy works best?",
+    options: [
+      "Save whatever is left after spending",
+      "Automatically save a fixed amount every week",
+      "Only save when you feel motivated",
+      "Count on birthday/holiday money",
+    ],
   },
 ];
+
 
 export default function QuizPage(): JSX.Element {
   const [answers, setAnswers] = useState<Record<number, number | null>>(

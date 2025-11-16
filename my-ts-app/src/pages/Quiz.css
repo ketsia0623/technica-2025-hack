@@ -39,15 +39,20 @@
 }
 
 .quiz-option {
-  padding: 14px;
-  background: #116110;
-  color: white;
-  border: none;
-  border-radius: 6px;
+  background: #9BE7A1;   /* lighter soft green */
+  color: #FFF7E6;        /* white-beige text */
+  border-radius: 12px;
+  padding: 12px 14px;
   cursor: pointer;
-  font-size: 1rem;
-  font-weight: 500;
+  transition: background 0.2s ease;
 }
+
+.quiz-option.selected {
+  background: #54b859;
+  color: white;
+}
+
+
 
 .quiz-option:hover {
   background: #0e4f22;
